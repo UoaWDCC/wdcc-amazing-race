@@ -1,0 +1,18 @@
+{
+  "name": "wdcc-amazing-race",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:UoaWDCC/wdcc-amazing-race.git",
+  "author": "Raymond Feng <rf.raymondfeng@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prettify": "prettier --write packages/*/src"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.7"
+  }
+}
