@@ -1,0 +1,6 @@
+# build files
+dist
+
+# generated swagger and tsoa
+swagger.json
+src/swagger

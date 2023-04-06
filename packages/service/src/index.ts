@@ -1,8 +1,6 @@
-import express from "express";
+import { AmazingRaceApp } from "./app";
 
-const app = express();
+const app = new AmazingRaceApp();
 
-const port = process.env.PORT || 9000;
-app.listen(port, () => {
-  console.log("Service starting on port:", port);
-});
+// Start the HTTP server
+app.startHttp(parseInt((process.env.PORT)) || 9000);
