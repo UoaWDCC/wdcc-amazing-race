@@ -2,9 +2,9 @@ import express, { json } from "express";
 import { RegisterRoutes } from "./swagger/routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.json";
+import { GSheetsService } from "./infra/GSheetsService";
 
 export class AmazingRaceApp {
-
   private app: express.Application;
 
   constructor() {
@@ -15,10 +15,16 @@ export class AmazingRaceApp {
   /**
    * Starts the server on the `port` specified.
    */
-  public startHttp(port: number) {
-    this.app.listen(port, () => {
-      console.log("Service starting on port:", port);
-    });
+  public async start(port: number) {
+    try {
+      await this.buildServices();
+
+      this.app.listen(port, () => {
+        console.log("Service starting on port:", port);
+      });
+    } catch (e: any) {
+      console.error("Failed to start service due to", e);
+    }
   }
 
   /**
@@ -39,5 +45,13 @@ export class AmazingRaceApp {
 
     // Configure all controllers
     RegisterRoutes(this.app);
+  }
+
+  /**
+   * Build HTTP services.
+   */
+  private async buildServices() {
+    const gsheetsService = new GSheetsService("", "", "");
+    await gsheetsService.init();
   }
 }

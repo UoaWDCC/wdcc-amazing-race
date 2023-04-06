@@ -3,7 +3,7 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 /**
  * Service for interacting with the Google Sheets API.
  */
-class GSheetsService {
+export class GSheetsService {
   private sheetId: string;
   private clientId: string;
   private secret: string;
@@ -14,9 +14,9 @@ class GSheetsService {
     this.secret = secret;
   }
 
-  private async init() {
+  public async init() {
     const doc = new GoogleSpreadsheet(this.sheetId);
-    
+
     await doc.useServiceAccountAuth({
       client_email: this.clientId,
       private_key: this.secret,
