@@ -1,11 +1,10 @@
-import { LocationId } from "./location.model"
+import { LocationId } from "./location.model";
 
 type TeamId = string;
-
 class Team {
   public readonly id: TeamId;
-  public readonly key: string
-  public readonly path: LocationId[]
+  public readonly key: string;
+  public readonly path: LocationId[];
 
   constructor(id: TeamId, key: string, path: LocationId[]) {
     this.id = id;
@@ -22,6 +21,4 @@ class Team {
   }
 }
 
-export {
-  Team
-}
+export { Team, TeamId };

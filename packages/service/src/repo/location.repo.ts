@@ -1,5 +1,6 @@
 import { GSheetsService } from "../infra/GSheetsService";
 import { Logger } from "../infra/Logger";
+import { Location, LocationId } from "../model/location.model";
 
 class LocationRepository {
   private gsheetsService: GSheetsService;
@@ -9,6 +10,12 @@ class LocationRepository {
     this.gsheetsService = gsheetsService;
     this.logger = logger;
   }
+
+  public async get(id: LocationId): Promise<Location> {
+    // TODO: Implement
+    return null;
+  }
+
 }
 
 export {
