@@ -4,28 +4,29 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.json";
 import { GSheetsService } from "./infra/GSheetsService";
 import * as gsheetsServiceAccountCredentials from "./private_keys/gsheets_sa_cred.json";
+import { Logger } from "./infra/Logger";
 
 export class AmazingRaceApp {
   private app: express.Application;
+  private logger: Logger;
 
-  constructor() {
+  constructor(logger: Logger) {
+    this.logger = logger;
     this.app = express();
     this.configure();
   }
 
   /**
-   * Starts the server on the `port` specified.
+   * Initialises the express server with all dependencies and returns the underlying Application.
    */
-  public async start(port: number) {
+  public async init(): Promise<express.Application> {
     try {
       await this.buildServices();
-
-      this.app.listen(port, () => {
-        console.log("Service starting on port:", port);
-      });
     } catch (e: any) {
       console.error("Failed to start service due to", e);
     }
+
+    return this.app;
   }
 
   /**
@@ -52,7 +53,11 @@ export class AmazingRaceApp {
    * Build HTTP services.
    */
   private async buildServices() {
-    const gsheetsService = new GSheetsService(process.env.DATASTORE_SPREADSHEET_ID, gsheetsServiceAccountCredentials);
+    const gsheetsService = new GSheetsService(
+      process.env.DATASTORE_SPREADSHEET_ID,
+      gsheetsServiceAccountCredentials,
+      this.logger
+    );
     await gsheetsService.init();
   }
 }
