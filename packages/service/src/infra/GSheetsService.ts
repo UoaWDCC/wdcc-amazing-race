@@ -1,26 +1,21 @@
-import { GoogleSpreadsheet } from "google-spreadsheet";
+import { GoogleSpreadsheet, ServiceAccountCredentials } from "google-spreadsheet";
 
 /**
  * Service for interacting with the Google Sheets API.
  */
 export class GSheetsService {
   private sheetId: string;
-  private clientId: string;
-  private secret: string;
+  private credentials: ServiceAccountCredentials;
 
-  constructor(sheetId: string, clientId: string, secret: string) {
+  constructor(sheetId: string, credentials: ServiceAccountCredentials) {
     this.sheetId = sheetId;
-    this.clientId = clientId;
-    this.secret = secret;
+    this.credentials = credentials;
   }
 
   public async init() {
     const doc = new GoogleSpreadsheet(this.sheetId);
 
-    await doc.useServiceAccountAuth({
-      client_email: this.clientId,
-      private_key: this.secret,
-    });
+    await doc.useServiceAccountAuth(this.credentials);
 
     await doc.loadInfo();
   }

@@ -3,6 +3,7 @@ import { RegisterRoutes } from "./swagger/routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.json";
 import { GSheetsService } from "./infra/GSheetsService";
+import * as gsheetsServiceAccountCredentials from "./private_keys/gsheets_sa_cred.json";
 
 export class AmazingRaceApp {
   private app: express.Application;
@@ -51,7 +52,7 @@ export class AmazingRaceApp {
    * Build HTTP services.
    */
   private async buildServices() {
-    const gsheetsService = new GSheetsService("", "", "");
+    const gsheetsService = new GSheetsService(process.env.DATASTORE_SPREADSHEET_ID, gsheetsServiceAccountCredentials);
     await gsheetsService.init();
   }
 }
