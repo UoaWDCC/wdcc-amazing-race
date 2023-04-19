@@ -10,7 +10,7 @@ class TeamRepository {
     this.gsheetsService = gsheetsService;
     this.logger = logger;
   }
-  
+
   // TOOD: Implement
 
   public async get(id: TeamId): Promise<Team> {
@@ -22,6 +22,4 @@ class TeamRepository {
   }
 }
 
-export {
-  TeamRepository
-}
+export { TeamRepository };

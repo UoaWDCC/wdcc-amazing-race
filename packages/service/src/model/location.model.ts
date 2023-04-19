@@ -15,13 +15,14 @@ class Question {
   public readonly response: QuestionResponse;
   public readonly answer: any;
   public readonly allowedGuesses: number;
+  public readonly linkKey: string;
 
   constructor(
     text: string,
     inputType: QuestionInputType,
     response: QuestionResponse,
     answer: any,
-    allowedGuesses: number,
+    allowedGuesses: number
   ) {
     this.text = text;
     this.inputType = inputType;
@@ -39,6 +40,7 @@ class Question {
 type LocationId = string;
 interface LocationProps {
   id: LocationId;
+  linkKey: string;
   question: Question;
   hint1: string;
   hint2?: string;
@@ -47,11 +49,14 @@ interface LocationProps {
 class Location {
   public readonly id: LocationId;
   public readonly question: Question;
-  private hint1: string;
-  private hint2?: string;
+  public readonly linkKey: string;
+  private readonly hint1: string;
+  private readonly hint2?: string;
 
-  constructor({ id, question, hint1, hint2 }: LocationProps) {
+  constructor({ id, question, hint1, hint2, linkKey }: LocationProps) {
     this.id = id;
+    this.linkKey = linkKey;
+
     this.question = question;
     this.hint1 = hint1;
     this.hint2 = hint2;

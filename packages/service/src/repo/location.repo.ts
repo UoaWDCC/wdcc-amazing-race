@@ -15,9 +15,6 @@ class LocationRepository {
     // TODO: Implement
     return null;
   }
-
 }
 
-export {
-  LocationRepository
-}
+export { LocationRepository };

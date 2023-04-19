@@ -11,6 +11,4 @@ class AnswerRepository {
   }
 }
 
-export {
-  AnswerRepository
-}
+export { AnswerRepository };
