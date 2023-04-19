@@ -9,6 +9,14 @@ class AnswerRepository {
     this.gsheetsService = gsheetsService;
     this.logger = logger;
   }
+
+  public async getTeamCompletedIds(teamId: string): Promise<string[]> {
+    return [];
+  }
+
+  public async addAnswer(teamId: string, locationId: string, answer: string) {
+    return null;
+  }
 }
 
 export { AnswerRepository };

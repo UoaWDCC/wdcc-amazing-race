@@ -12,7 +12,10 @@ class LocationRepository {
   }
 
   public async get(id: LocationId): Promise<Location> {
-    // TODO: Implement
+    return null;
+  }
+
+  public async getByKey(key: string): Promise<Location> {
     return null;
   }
 }

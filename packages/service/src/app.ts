@@ -5,10 +5,15 @@ import swaggerSpec from "./swagger/swagger.json";
 import { GSheetsService } from "./infra/GSheetsService";
 import * as gsheetsServiceAccountCredentials from "./private_keys/gsheets_sa_cred.json";
 import { Logger } from "./infra/Logger";
+import { DIProvider } from "./di.provider";
+import { LocationRepository } from "./repo/location.repo";
+import { AnswerRepository } from "./repo/answer.repo";
+import { TeamRepository } from "./repo/team.repo";
 
 export class AmazingRaceApp {
   private app: express.Application;
   private logger: Logger;
+  private diProvider: DIProvider;
 
   constructor(logger: Logger) {
     this.logger = logger;
@@ -59,5 +64,13 @@ export class AmazingRaceApp {
       this.logger
     );
     await gsheetsService.init();
+
+    // TODO: Replace DI Provider with IOC framework
+    this.diProvider = new DIProvider({
+      locationRepo: new LocationRepository(gsheetsService, this.logger),
+      answerRepo: new AnswerRepository(gsheetsService, this.logger),
+      teamRepo: new TeamRepository(gsheetsService, this.logger),
+      logger: this.logger,
+    });
   }
 }

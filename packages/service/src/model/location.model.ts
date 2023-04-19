@@ -1,12 +1,12 @@
-enum QuestionInputType {
-  TEXT,
-  NUMBER,
-  LONG_TEXT,
+export enum QuestionInputType {
+  TEXT = "TEXT",
+  NUMBER = "NUMBER",
+  LONG_TEXT = "LONG_TEXT",
 }
 
-enum QuestionResponse {
-  IMMEDIATE,
-  DELAYED,
+export enum QuestionResponse {
+  IMMEDIATE = "IMMEDIATE",
+  DELAYED = "DELAYED",
 }
 
 class Question {
