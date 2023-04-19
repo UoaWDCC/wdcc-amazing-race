@@ -5,7 +5,7 @@ const format = winston.format.printf(
     if (!!meta.class) {
       return `${timestamp} ${level}: [${meta.class}] ${message}`;
     } else {
-      return `${timestamp} ${level}: ${message}`
+      return `${timestamp} ${level}: ${message}`;
     }
   }
 );
@@ -31,7 +31,7 @@ class Logger {
     });
   }
 
-  public warn(message: string, clazz?: any,) {
+  public warn(message: string, clazz?: any) {
     this._logger.warn(message, {
       class: clazz?.constructor?.name,
     });

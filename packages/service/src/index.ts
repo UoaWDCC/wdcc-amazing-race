@@ -12,8 +12,9 @@ const logger = new Logger();
 const app = new AmazingRaceApp(logger);
 
 // Initialises the app
-app.init()
-  .then(app => app.listen(port))
+app
+  .init()
+  .then((app) => app.listen(port))
   .then(() => {
     logger.info(`Service starting on port ${port}`);
   });
