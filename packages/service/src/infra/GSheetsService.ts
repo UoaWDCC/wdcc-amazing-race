@@ -1,7 +1,4 @@
-import {
-  GoogleSpreadsheet,
-  ServiceAccountCredentials,
-} from "google-spreadsheet";
+import { GoogleSpreadsheet, ServiceAccountCredentials } from "google-spreadsheet";
 import { Logger } from "./Logger";
 
 /**
@@ -12,11 +9,7 @@ export class GSheetsService {
   private credentials: ServiceAccountCredentials;
   private logger: Logger;
 
-  constructor(
-    sheetId: string,
-    credentials: ServiceAccountCredentials,
-    logger: Logger
-  ) {
+  constructor(sheetId: string, credentials: ServiceAccountCredentials, logger: Logger) {
     this.sheetId = sheetId;
     this.credentials = credentials;
     this.logger = logger;

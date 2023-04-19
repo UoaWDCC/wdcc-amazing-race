@@ -42,13 +42,9 @@ export class AmazingRaceApp {
     this.app.use(json());
 
     // Support swagger docs at "<url:port>/swagger"
-    this.app.use(
-      "/swagger",
-      swaggerUi.serve,
-      async (req: express.Request, res: express.Response) => {
-        return res.send(swaggerUi.generateHTML(swaggerSpec));
-      }
-    );
+    this.app.use("/swagger", swaggerUi.serve, async (req: express.Request, res: express.Response) => {
+      return res.send(swaggerUi.generateHTML(swaggerSpec));
+    });
 
     // Configure all controllers
     RegisterRoutes(this.app);

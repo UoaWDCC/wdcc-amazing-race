@@ -16,11 +16,8 @@ interface Answer {
 @Route("question")
 export class TeamLoginController extends Controller {
   @Get("{linkKey}")
-  public async get(
-    @Path() linkKey: string,
-    @Query() teamKey?: string
-  ): Promise<Question> {
-    const { locationRepo, teamRepo, answerRepo } = DIProvider.getInstance();
+  public async get(@Path() linkKey: string, @Query() teamKey?: string): Promise<Question> {
+    const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
 
     const location = await locationRepo.getByKey(linkKey);
 
@@ -52,6 +49,8 @@ export class TeamLoginController extends Controller {
       return;
     }
 
+    logger.info(`Team: ${team.id} requested question for Location: ${location.id}`, this);
+
     return {
       text: location.question.text,
       type: location.question.inputType,
@@ -60,12 +59,8 @@ export class TeamLoginController extends Controller {
   }
 
   @Post("{linkKey}")
-  public async post(
-    @Path() linkKey: string,
-    @Body() body: Answer
-  ): Promise<any> {
-    const { locationRepo, teamRepo, answerRepo, logger } =
-      DIProvider.getInstance();
+  public async post(@Path() linkKey: string, @Body() body: Answer): Promise<any> {
+    const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
     const location = await locationRepo.getByKey(linkKey);
 
     // Invalid location key
@@ -82,9 +77,7 @@ export class TeamLoginController extends Controller {
       return;
     }
 
-    logger.info(
-      `Team: ${team.id}, Location: ${location.id}, Answer: "${body.answer}"`
-    );
+    logger.info(`Team: ${team.id}, Location: ${location.id}, Answer: "${body.answer}"`, this);
 
     await answerRepo.addAnswer(team.id, location.id, body.answer);
 

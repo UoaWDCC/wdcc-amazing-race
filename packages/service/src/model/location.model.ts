@@ -1,10 +1,10 @@
-export enum QuestionInputType {
+enum QuestionInputType {
   TEXT = "TEXT",
   NUMBER = "NUMBER",
   LONG_TEXT = "LONG_TEXT",
 }
 
-export enum QuestionResponse {
+enum QuestionResponse {
   IMMEDIATE = "IMMEDIATE",
   DELAYED = "DELAYED",
 }
