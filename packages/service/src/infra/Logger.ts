@@ -1,14 +1,12 @@
 import winston from "winston";
 
-const format = winston.format.printf(
-  ({ level, timestamp, message, ...meta }) => {
-    if (!!meta.class) {
-      return `${timestamp} ${level}: [${meta.class}] ${message}`;
-    } else {
-      return `${timestamp} ${level}: ${message}`;
-    }
+const format = winston.format.printf(({ level, timestamp, message, ...meta }) => {
+  if (!!meta.class) {
+    return `${timestamp} ${level}: [${meta.class}] ${message}`;
+  } else {
+    return `${timestamp} ${level}: ${message}`;
   }
-);
+});
 
 class Logger {
   private _logger = winston.createLogger({
@@ -16,11 +14,7 @@ class Logger {
     defaultMeta: { service: "@amazing-race/service" },
     transports: [
       new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          winston.format.colorize(),
-          format
-        ),
+        format: winston.format.combine(winston.format.timestamp(), winston.format.colorize(), format),
       }),
     ],
   });

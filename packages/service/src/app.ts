@@ -2,13 +2,18 @@ import express, { json } from "express";
 import { RegisterRoutes } from "./swagger/routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.json";
-import { GSheetsService } from "./infra/GSheetsService";
+import { GSheetsService } from "./infra/gsheets.service";
 import * as gsheetsServiceAccountCredentials from "./private_keys/gsheets_sa_cred.json";
-import { Logger } from "./infra/Logger";
+import { Logger } from "./infra/logger";
+import { DIProvider } from "./di.provider";
+import { LocationRepository } from "./repo/location.repo";
+import { AnswerRepository } from "./repo/answer.repo";
+import { TeamRepository } from "./repo/team.repo";
 
 export class AmazingRaceApp {
   private app: express.Application;
   private logger: Logger;
+  private diProvider: DIProvider;
 
   constructor(logger: Logger) {
     this.logger = logger;
@@ -37,13 +42,9 @@ export class AmazingRaceApp {
     this.app.use(json());
 
     // Support swagger docs at "<url:port>/swagger"
-    this.app.use(
-      "/swagger",
-      swaggerUi.serve,
-      async (req: express.Request, res: express.Response) => {
-        return res.send(swaggerUi.generateHTML(swaggerSpec));
-      }
-    );
+    this.app.use("/swagger", swaggerUi.serve, async (req: express.Request, res: express.Response) => {
+      return res.send(swaggerUi.generateHTML(swaggerSpec));
+    });
 
     // Configure all controllers
     RegisterRoutes(this.app);
@@ -59,5 +60,14 @@ export class AmazingRaceApp {
       this.logger
     );
     await gsheetsService.init();
+
+    const locationRepo = new LocationRepository(gsheetsService, this.logger);
+    // TODO: Replace DI Provider with IOC framework
+    this.diProvider = new DIProvider({
+      locationRepo: locationRepo,
+      answerRepo: new AnswerRepository(gsheetsService, locationRepo, this.logger),
+      teamRepo: new TeamRepository(gsheetsService, this.logger),
+      logger: this.logger,
+    });
   }
 }
