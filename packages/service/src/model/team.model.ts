@@ -1,3 +1,4 @@
+import { loggers } from "winston";
 import { LocationId } from "./location.model";
 
 type TeamId = string;
@@ -15,9 +16,17 @@ class Team {
   /**
    * Returns the next best location ID to visit.
    */
-  getNextLocationId(completed: LocationId[]): LocationId {
-    // TODO: Implement
-    return "";
+  getNextLocationId(completed: Set<LocationId>): LocationId {
+    for (let pathId of this.path) {
+      if (completed.has(pathId)) continue;
+
+      return pathId;
+    }
+
+    if (this.path.length === 0) {
+      return null;
+    }
+    return this.path[-1];
   }
 }
 

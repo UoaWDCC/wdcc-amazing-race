@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import { AmazingRaceApp } from "./app";
-import { Logger } from "./infra/Logger";
+import { Logger } from "./infra/logger";
 
 // Load configuration from .env files into process.env
 dotenv.config();

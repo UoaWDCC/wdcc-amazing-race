@@ -1,4 +1,4 @@
-import { Logger } from "./infra/Logger";
+import { Logger } from "./infra/logger";
 import { AnswerRepository } from "./repo/answer.repo";
 import { LocationRepository } from "./repo/location.repo";
 import { TeamRepository } from "./repo/team.repo";

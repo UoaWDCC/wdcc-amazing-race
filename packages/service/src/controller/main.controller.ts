@@ -13,13 +13,42 @@ interface Answer {
   answer: string;
 }
 
+interface Hint {
+  nextLocationId: string;
+  hints: string[];
+}
+
 @Route("question")
-export class TeamLoginController extends Controller {
-  @Get("{linkKey}")
-  public async get(@Path() linkKey: string, @Query() teamKey?: string): Promise<Question> {
+export class AmazingRaceController extends Controller {
+  @Get("")
+  public async getHint(@Query() teamKey?: string): Promise<Hint> {
+    const { locationRepo, answerRepo, teamRepo, logger } = DIProvider.getInstance();
+
+    const team = await teamRepo.getByKey(teamKey);
+
+    if (!team) {
+      this.setStatus(401);
+      return;
+    }
+
+    const locationsVisited = await answerRepo.getTeamCompletedIds(team.id);
+    const nextLocationId = team.getNextLocationId(locationsVisited);
+
+    const nextLocation = await locationRepo.get(nextLocationId);
+
+    logger.info(`Team: ${team.id} requested hints for Location: ${nextLocation.id}`, this);
+
+    return {
+      nextLocationId: nextLocation.id,
+      hints: nextLocation.getHints(),
+    };
+  }
+
+  @Get("{locationKey}")
+  public async getLocationQuestion(@Path() locationKey: string, @Query() teamKey?: string): Promise<Question> {
     const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
 
-    const location = await locationRepo.getByKey(linkKey);
+    const location = await locationRepo.getByKey(locationKey);
 
     // Invalid location key
     if (!location) {
@@ -38,7 +67,7 @@ export class TeamLoginController extends Controller {
     const answers = await answerRepo.getTeamCompletedIds(team.id);
 
     // Location was already completed
-    if (answers.find((val) => val === location.id)) {
+    if (answers.has(location.id)) {
       this.setStatus(409);
       return;
     }
@@ -58,10 +87,10 @@ export class TeamLoginController extends Controller {
     };
   }
 
-  @Post("{linkKey}")
-  public async post(@Path() linkKey: string, @Body() body: Answer): Promise<any> {
+  @Post("{locationKey}")
+  public async submitAnswer(@Path() locationKey: string, @Body() body: Answer): Promise<any> {
     const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
-    const location = await locationRepo.getByKey(linkKey);
+    const location = await locationRepo.getByKey(locationKey);
 
     // Invalid location key
     if (!location) {
