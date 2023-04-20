@@ -1,25 +1,49 @@
 import { Controller, Get, Post, Path, Query, Route, Body } from "tsoa";
 import { DIProvider } from "../di.provider";
-import { QuestionInputType, QuestionResponse } from "../model/location.model";
+import { QuestionInputType } from "../model/location.model";
 
 interface Question {
+  /**
+   * The question text.
+   */
   text: string;
+
+  /**
+   * The type of answer we're expecting (e.g. number or text).
+   */
   type: QuestionInputType;
-  response: QuestionResponse;
 }
 
 interface Answer {
+  /**
+   * The team key (4 characters) to identify the team submitting the answer.
+   */
   teamKey: string;
+
+  /**
+   * The answer provided.
+   */
   answer: string;
 }
 
 interface Hint {
+  /**
+   * The ID of the next location the team has to visit.
+   */
   nextLocationId: string;
+
+  /**
+   * Hints to point the team to the next location.
+   */
   hints: string[];
 }
 
 @Route("question")
 export class AmazingRaceController extends Controller {
+  /**
+   * @param teamKey The team's key (4 characters).
+   * @returns the hint to the next location for a provided team.
+   */
   @Get("")
   public async getHint(@Query() teamKey?: string): Promise<Hint> {
     const { locationRepo, answerRepo, teamRepo, logger } = DIProvider.getInstance();
@@ -44,6 +68,11 @@ export class AmazingRaceController extends Controller {
     };
   }
 
+  /**
+   * @param locationKey The key (4 characters) identifying the location that was accessed.
+   * @param teamKey The team's key (4 characters).
+   * @returns The question the team needs to answer at this location.
+   */
   @Get("{locationKey}")
   public async getLocationQuestion(@Path() locationKey: string, @Query() teamKey?: string): Promise<Question> {
     const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
@@ -83,10 +112,13 @@ export class AmazingRaceController extends Controller {
     return {
       text: location.question.text,
       type: location.question.inputType,
-      response: location.question.response,
     };
   }
 
+  /**
+   * @param locationKey The key (4 characters) identifying the location that was accessed.
+   * @param body
+   */
   @Post("{locationKey}")
   public async submitAnswer(@Path() locationKey: string, @Body() body: Answer): Promise<any> {
     const { locationRepo, teamRepo, answerRepo, logger } = DIProvider.getInstance();
