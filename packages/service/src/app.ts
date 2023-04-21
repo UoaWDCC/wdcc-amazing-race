@@ -9,6 +9,7 @@ import { DIProvider } from "./di.provider";
 import { LocationRepository } from "./repo/location.repo";
 import { AnswerRepository } from "./repo/answer.repo";
 import { TeamRepository } from "./repo/team.repo";
+import cors from "cors";
 
 export class AmazingRaceApp {
   private app: express.Application;
@@ -40,6 +41,8 @@ export class AmazingRaceApp {
   private configure() {
     // Support JSON
     this.app.use(json());
+
+    this.app.use(cors());
 
     // Support swagger docs at "<url:port>/swagger"
     this.app.use("/swagger", swaggerUi.serve, async (req: express.Request, res: express.Response) => {
