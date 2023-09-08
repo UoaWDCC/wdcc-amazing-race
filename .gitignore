@@ -2,3 +2,4 @@ app.yaml
 node_modules
 .env
 private_keys
+.idea
