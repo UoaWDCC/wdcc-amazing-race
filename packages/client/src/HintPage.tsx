@@ -41,7 +41,7 @@ const hrStyle = css`
 
 export function HintPage() {
   const { teamKey } = useParams();
-  const [hint, setHint] = useState();
+  const [hint, setHint] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
 
   const navigate = useNavigate();

@@ -16,7 +16,13 @@ const usePostAnswer = async (locationKey: string, teamKey: string, answer: strin
     },
   });
 
-  return resp.status;
+  if (resp.ok) {
+    const data = await resp.json();
+
+    return data?.isLastTeam ?? false;
+  }
+  
+  return false;
 };
 
 const Title = css`
@@ -69,15 +75,45 @@ const getStartedBtnStyle = css`
   border-radius: 5px;
 `;
 
+const linkStyle = css`
+  background-color: #ffd166;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  text-decoration: none;
+`
+
 export function AnswerComponent({ question, locationKey, teamKey }: AnswerComponentProps) {
+
+  const [answered, setAnswered] = useState(false);
+  const [isLastTeam, setIsLastTeam] = useState(false);
+
   const navigate = useNavigate();
   const onSubmitBtnPress = async () => {
     const answerDom = document.getElementById("answer");
     const answer = (answerDom as any).value;
-    const resp = await usePostAnswer(locationKey, teamKey, answer);
-    
-    navigate(`/hint/${teamKey}`);
+    const isLastTeam = await usePostAnswer(locationKey, teamKey, answer);
+
+    setAnswered(true);
+    setIsLastTeam(isLastTeam);
+
+    if (!isLastTeam) {
+      navigate(`/hint/${teamKey}`);
+    }    
   };
+
+  if (answered && isLastTeam) {
+    return (<div className={Container}>
+      <h1 className={Title}>IMPORTANT: Special Alert</h1>
+      <br />
+      You are the last team to complete this QR code! Please take it down with you before
+      you go to the next location. Thanks for making this race more sustainable :-)
+      <br />
+      <br />
+      <Link className={linkStyle} to={`/hint/${teamKey}`}>Click me to get next hint</Link>
+    </div>)
+  }
 
   return (
     <div className={Container}>

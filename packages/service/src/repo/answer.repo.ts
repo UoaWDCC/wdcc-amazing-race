@@ -37,9 +37,14 @@ class AnswerRepository {
     return completed;
   }
 
-  public async addAnswer(teamId: string, locationId: string, answer: string) {
+  public async addAnswer(teamId: string, locationId: string, answer: string): Promise<boolean> {
     const sheet = await this.gsheetsService.getSheetData(ANSWERS_SHEET_NAME);
     const row = sheet.find((it) => it["TeamId"] === teamId);
+
+    const otherTeamsCompletion = sheet
+      .filter(it => it["TeamId"] !== "TestIgnore")
+      .map(it => it[locationId])
+      .filter(it => !it);
 
     if (!row) {
       return null;
@@ -49,6 +54,10 @@ class AnswerRepository {
 
     row[locationId] = `${currTime}: ${answer}`;
     row.save();
+
+    // If all other teams have completed this QR code return true
+    return otherTeamsCompletion.length <= 1;
+    
   }
 }
 

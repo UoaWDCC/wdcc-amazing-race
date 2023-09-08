@@ -143,9 +143,14 @@ export class AmazingRaceController extends Controller {
 
     logger.info(`Team: ${team.id}, Location: ${location.id}, Answer: "${body.answer}"`, this);
 
-    await answerRepo.addAnswer(team.id, location.id, body.answer);
-
+    const isLastTeam = await answerRepo.addAnswer(team.id, location.id, body.answer);
+    if (isLastTeam) {
+      logger.info(`Team: ${team.id} is the last team at Location: ${location.id}`);
+    }
+    
     this.setStatus(200);
-    return;
+    return {
+      isLastTeam
+    };
   }
 }
