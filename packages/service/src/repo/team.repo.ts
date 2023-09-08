@@ -9,11 +9,11 @@ class TeamRepository {
 
   private cache: RepositoryCache<Team>;
 
-  constructor(gsheetsService: GSheetsService, logger: Logger) {
+  constructor(gsheetsService: GSheetsService, logger: Logger, cacheLifetime: number) {
     this.gsheetsService = gsheetsService;
     this.logger = logger;
 
-    this.cache = new RepositoryCache<Team>(300);
+    this.cache = new RepositoryCache<Team>(cacheLifetime);
   }
 
   public async getByKey(key: string): Promise<Team> {

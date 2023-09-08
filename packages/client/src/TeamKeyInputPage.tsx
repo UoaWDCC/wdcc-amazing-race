@@ -2,6 +2,8 @@ import { css } from "@linaria/core";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { AnswerComponent } from "./AnswerComponent";
+import { toast } from "react-toastify";
+import { Header } from "./Header";
 
 interface UseGetQuestionResp {
   response: number;
@@ -17,13 +19,13 @@ const useGetQuestion = async (qId: string, teamKey: string): Promise<UseGetQuest
     const data = await resp.json();
     return {
       response: 200,
-      question: data.text
-    }
+      question: data.text,
+    };
   }
 
   return {
-    response: resp.status
-  }
+    response: resp.status,
+  };
 };
 
 const Title = css`
@@ -32,33 +34,31 @@ const Title = css`
 `;
 
 const InputKey = css`
-  display: block;
-  padding: 15px;
+  padding: 10px 20px;
   text-align: center;
-  width: 250px;
 
   box-sizing: border-box;
 
-  border-radius: 10px;
+  border-radius: 5px;
   border: 0;
 
-  margin: 20px auto;
+  margin: 20px 10px;
 
   letter-spacing: 1rem;
+  text-indent: 0.5rem;
 
   &::placeholder {
-    font-size: 0.8rem;
+    text-indent: 0;
     letter-spacing: normal;
   }
 `;
 
 const SubmitBtn = css`
   background-color: #ffd166;
-  border-radius: 10px;
+  border-radius: 5px;
   color: black;
   border: 0;
-  padding: 10px 30px;
-  display: block;
+  padding: 10px 20px;
   margin: 10px auto;
 
   &:hover {
@@ -79,30 +79,50 @@ export function TeamKeyInputPage() {
       setQuestion(question!!);
     } else {
       switch (response) {
-        case 401: alert("Your team ID was incorrect"); break;
-        case 403: alert("You skipped a location! Please follow the previous hint"); break;
-        case 404: alert("No location found"); break;
-        case 409: alert("You have already answered the question at this location!"); break;
+        case 401: {
+          toast.error("Your team key was incorrect");
+          break;
+        }
+        case 403: {
+          toast.warn("You skipped a location! Please follow the previous hint");
+          break;
+        }
+        case 404: {
+          toast.error("Bad QR code/location ID - no location found");
+          break;
+        }
+        case 409: {
+          toast.warn("You have already answered the question at this location!");
+          break;
+        }
       }
     }
   };
 
   if (!!question) {
-    return <AnswerComponent locationKey={qId!!} teamKey={teamKey} question={question} />
+    return <AnswerComponent locationKey={qId!!} teamKey={teamKey} question={question} />;
   } else {
     return (
-      <div>
-        <h1 className={Title}>You have reached location: {qId}</h1>
-        <input className={InputKey}
-          type="text"
-          placeholder="Enter team key (4 characters) here"
-          maxLength={4}
-          onChange={(e) => setTeamKey(e.target.value)}
-        />
-        <button className={SubmitBtn} type="submit" onClick={onSubmitBtnPress}>
-          Go
-        </button>
-      </div>
+      <>
+        <Header />
+        <div>
+          <h2 className={Title}>You have reached location {qId}</h2>
+          <p>Enter your team key below to answer the question!</p>
+
+          <div>
+            <input
+              className={InputKey}
+              type="text"
+              placeholder="Team Key"
+              maxLength={4}
+              onChange={(e) => setTeamKey(e.target.value)}
+            />
+            <button className={SubmitBtn} type="submit" onClick={onSubmitBtnPress}>
+              Go
+            </button>
+          </div>
+        </div>
+      </>
     );
   }
 }

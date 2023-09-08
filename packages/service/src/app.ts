@@ -64,12 +64,13 @@ export class AmazingRaceApp {
     );
     await gsheetsService.init();
 
-    const locationRepo = new LocationRepository(gsheetsService, this.logger);
+    const cacheLifetime = isNaN(process.env.CACHE_LIFETIME as any) ? 60 : parseInt(process.env.CACHE_LIFETIME);
+    const locationRepo = new LocationRepository(gsheetsService, this.logger, cacheLifetime);
     // TODO: Replace DI Provider with IOC framework
     this.diProvider = new DIProvider({
       locationRepo: locationRepo,
       answerRepo: new AnswerRepository(gsheetsService, locationRepo, this.logger),
-      teamRepo: new TeamRepository(gsheetsService, this.logger),
+      teamRepo: new TeamRepository(gsheetsService, this.logger, cacheLifetime),
       logger: this.logger,
     });
   }

@@ -36,6 +36,8 @@ interface Hint {
    * Hints to point the team to the next location.
    */
   hints: string[];
+
+  photoHintUrl: string;
 }
 
 @Route("question")
@@ -65,6 +67,7 @@ export class AmazingRaceController extends Controller {
     return {
       nextLocationId: nextLocation.id,
       hints: nextLocation.getHints(),
+      photoHintUrl: nextLocation.photoHintUrl,
     };
   }
 

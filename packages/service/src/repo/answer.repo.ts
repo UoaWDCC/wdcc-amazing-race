@@ -45,7 +45,9 @@ class AnswerRepository {
       return null;
     }
 
-    row[locationId] = answer;
+    const currTime = new Date().toLocaleString('en-NZ', { hour: 'numeric', minute: 'numeric', timeZone: "Pacific/Auckland" });
+
+    row[locationId] = `${currTime}: ${answer}`;
     row.save();
   }
 }
