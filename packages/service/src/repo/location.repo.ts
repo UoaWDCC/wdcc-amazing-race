@@ -9,11 +9,11 @@ class LocationRepository {
 
   private cache: RepositoryCache<Location>;
 
-  constructor(gsheetsService: GSheetsService, logger: Logger) {
+  constructor(gsheetsService: GSheetsService, logger: Logger, cacheLifetime: number) {
     this.gsheetsService = gsheetsService;
     this.logger = logger;
 
-    this.cache = new RepositoryCache<Location>(300);
+    this.cache = new RepositoryCache<Location>(cacheLifetime);
   }
 
   public async get(id: LocationId) {
@@ -42,6 +42,7 @@ class LocationRepository {
           question: q,
           id: it["LocationId"],
           linkKey: it["LocationKey"],
+          photoHintUrl: it["PhotoHint"],
           hint1: it["Hint1"],
           ...(!!it["Hint2"] && { hint2: it["Hint2"] }),
         });

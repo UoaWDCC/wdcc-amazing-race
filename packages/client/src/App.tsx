@@ -1,14 +1,13 @@
 import { createContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import "normalize.css";
+import "./main.css";
 import { TeamKeyInputPage } from "./TeamKeyInputPage";
 import { css } from "@linaria/core";
 import { HintPage } from "./HintPage";
-
-
-export function HomePage() {
-  return <div>Home page</div>;
-}
+import 'react-toastify/dist/ReactToastify.css';
+import { HomePage } from "./HomePage";
+import { ToastContainer } from "react-toastify";
 
 
 export function UploadPage() {
@@ -16,11 +15,16 @@ export function UploadPage() {
 }
 
 const Container = css`
-  @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
-
-  background: linear-gradient(#087df1, #3A86FF);
+  position: relative;
+  background: linear-gradient(#087df1, #3a86ff);
   width: 100vw;
+  max-width: 650px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  box-shadow: 0 0 20px grey;
+  margin: 0 auto;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   color: white;
 
   display: flex;
@@ -38,14 +42,26 @@ export default function App() {
   return (
     <div className={Container}>
       <QuestionContext.Provider value={""}>
-      <Routes>
-        <Route path="/">
-          <Route path="question/:qId" element={<TeamKeyInputPage />} />
-          <Route path="hint/:teamKey" element={<HintPage />} />
-          <Route index path="*" element={<HomePage />} />
-        </Route>
-      </Routes>
+        <Routes>
+          <Route path="/">
+            <Route path="question/:qId" element={<TeamKeyInputPage />} />
+            <Route path="hint/:teamKey" element={<HintPage />} />
+            <Route index element={<HomePage />} />
+          </Route>
+        </Routes>
       </QuestionContext.Provider>
+      <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
     </div>
   );
 }

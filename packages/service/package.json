@@ -9,7 +9,9 @@
     "build": "tsoa spec-and-routes && tsc --build",
     "start": "node dist/index.js",
     "dev": "tsoa spec-and-routes && ts-node src/index.ts",
-    "test": "ts-mocha ./test/**/*.test.ts"
+    "test": "ts-mocha ./test/**/*.test.ts",
+    "predeploy-prod": "yarn build",
+    "deploy-prod": "gcloud app deploy --project=wdcc-amazing-race-prod"
   },
   "dependencies": {
     "cors": "^2.8.5",

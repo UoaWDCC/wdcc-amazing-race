@@ -44,6 +44,7 @@ interface LocationProps {
   question: Question;
   hint1: string;
   hint2?: string;
+  photoHintUrl: string;
 }
 
 class Location {
@@ -52,14 +53,16 @@ class Location {
   public readonly linkKey: string;
   private readonly hint1: string;
   private readonly hint2?: string;
+  public readonly photoHintUrl: string;
 
-  constructor({ id, question, hint1, hint2, linkKey }: LocationProps) {
+  constructor({ id, question, hint1, hint2, linkKey, photoHintUrl }: LocationProps) {
     this.id = id;
     this.linkKey = linkKey;
 
     this.question = question;
     this.hint1 = hint1;
     this.hint2 = hint2;
+    this.photoHintUrl = photoHintUrl;
   }
 
   getHints(): string[] {
