@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { css } from "@linaria/core";
 import SpinningCircles from "react-loading-icons/dist/esm/components/spinning-circles";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Header } from "./Header";
 
-const useGetHint = async (teamKey: string) => {
+interface HintData {
+  hinta: string;
+  hintb: string;
+  photoHintUrl: string;
+}
+
+const useGetHint = async (teamKey: string): Promise<HintData | null> => {
   const resp = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/question?teamKey=${teamKey}`, {
     method: "GET",
   });
@@ -13,7 +19,8 @@ const useGetHint = async (teamKey: string) => {
   if (resp.ok) {
     const { nextLocationId, hints, photoHintUrl } = await resp.json();
     return {
-      hint: hints[0],
+      hinta: hints[0],
+      hintb: hints[1],
       photoHintUrl: photoHintUrl,
     };
   } else {
@@ -41,16 +48,25 @@ const hrStyle = css`
 
 export function HintPage() {
   const { teamKey } = useParams();
-  const [hint, setHint] = useState(null);
-  const [photoUrl, setPhotoUrl] = useState(null);
+  const [hint, setHint] = useState<HintData | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [showHintButton, setShowHintButton] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [countdown, setCountdown] = useState(120);
+  const hintDataRef = useRef<HintData | null>(null);
 
   const navigate = useNavigate();
 
   const loadHints = async () => {
     try {
-      const hint = await useGetHint(teamKey!!);
-      setHint(hint?.hint);
-      setPhotoUrl(hint?.photoHintUrl);
+      if (!teamKey) return; // Check if teamKey is undefined
+      const hintData = await useGetHint(teamKey);
+      hintDataRef.current = hintData;
+      setHint(hintData);
+      if (hintData?.photoHintUrl) { // Check if photoHintUrl is defined
+        setPhotoUrl(hintData.photoHintUrl);
+      }
+      setShowHintButton(true);
     } catch (e) {
       if ((e as Error).cause === 403) {
         toast.error("Team key was invalid! Navigating back home in 5 seconds...");
@@ -63,21 +79,42 @@ export function HintPage() {
 
   useEffect(() => {
     loadHints();
-  }, []);
+  }, [teamKey]); // Add teamKey to the dependency array to reload hints when teamKey changes
+
+  useEffect(() => {
+    if (countdown > 0 && showHintButton) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [countdown, showHintButton]);
+
+  const handleClick = () => {
+    setShowHint(true);
+  };
+
   return (
     <div className={Container}>
-      {!!hint ? (
+      <h1>Your next hint</h1>
+      <hr className={hrStyle} />
+
+      <p>{hint?.hinta}</p>
+      <hr className={hrStyle} />  
+
+      <img className={hintImageStyle} src={photoUrl ?? ""} />
+      <br />
+      {showHintButton && !showHint && (
         <>
-          <h1>Your next hint</h1>
-          <hr className={hrStyle} />
-
-          <p>{hint}</p>
-          <hr className={hrStyle} />
-
-          <img className={hintImageStyle} src={photoUrl ?? ""} />
+          <p>Hint 2 can be viewed in: {countdown} seconds</p>
+          <button disabled={countdown > 0} onClick={handleClick}>Show Hint 2</button>
         </>
-      ) : (
-        <SpinningCircles />
+      )}
+      {showHint && (
+        <div>
+          <p>{hintDataRef.current?.hintb}</p>
+        </div>
       )}
     </div>
   );
