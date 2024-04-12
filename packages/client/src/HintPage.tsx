@@ -103,7 +103,7 @@ export function HintPage() {
       <p>{hint?.hinta}</p>
       <hr className={hrStyle} />  
 
-      <img className={hintImageStyle} src={photoUrl ?? ""} />
+      <img className={hintImageStyle} src={photoUrl ?? ""} style={{ maxWidth: "450px", maxHeight: "450px" }} />
       <br />
       {showHintButton && !showHint && (
         <>
