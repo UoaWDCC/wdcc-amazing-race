@@ -1,0 +1,18 @@
+runtime: nodejs20 # Specify the Node.js version, adjust according to your app's requirements
+
+env: standard # Use the standard environment
+
+instance_class: F1 # Choose the instance class based on your needs; F1 is the smallest available
+
+automatic_scaling:
+  target_cpu_utilization: 0.65 # Target CPU utilization for scaling
+  min_instances: 1 # Minimum number of instances
+  max_instances: 2 # Maximum number of instances
+
+resources:
+  cpu: 1 # Number of CPU cores
+  memory_gb: 0.5 # Amount of memory in GB
+  disk_size_gb: 10 # Disk size in GB
+
+env_variables: # Environment variables
+  NODE_ENV: "production"

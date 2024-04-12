@@ -6,7 +6,6 @@ import { RepositoryCache } from "./cache";
 class TeamRepository {
   private gsheetsService: GSheetsService;
   private logger: Logger;
-
   private cache: RepositoryCache<Team>;
 
   constructor(gsheetsService: GSheetsService, logger: Logger, cacheLifetime: number) {
