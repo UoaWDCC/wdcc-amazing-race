@@ -42,22 +42,25 @@ class AnswerRepository {
     const row = sheet.find((it) => it["TeamId"] === teamId);
 
     const otherTeamsCompletion = sheet
-      .filter(it => it["TeamId"] !== "TestIgnore")
-      .map(it => it[locationId])
-      .filter(it => !it);
+      .filter((it) => it["TeamId"] !== "TestIgnore")
+      .map((it) => it[locationId])
+      .filter((it) => !it);
 
     if (!row) {
       return null;
     }
 
-    const currTime = new Date().toLocaleString('en-NZ', { hour: 'numeric', minute: 'numeric', timeZone: "Pacific/Auckland" });
+    const currTime = new Date().toLocaleString("en-NZ", {
+      hour: "numeric",
+      minute: "numeric",
+      timeZone: "Pacific/Auckland",
+    });
 
     row[locationId] = `${currTime}: ${answer}`;
     row.save();
 
     // If all other teams have completed this QR code return true
     return otherTeamsCompletion.length <= 1;
-    
   }
 }
 
